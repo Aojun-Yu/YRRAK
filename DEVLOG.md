@@ -76,7 +76,8 @@ The game now has a playable console MVP:
 - Player healing is capped at max HP.
 - Added a small Java Swing GUI prototype in `gui.GuiMain`.
 - Added `scripts/gui.sh` to launch the GUI prototype.
+- The GUI prototype now supports three enemies, reward card choices, and a victory/game-over log.
 
 ### Next Small Goal
 
-Improve the GUI prototype or capture screenshots for the portfolio.
+Capture screenshots of the console and GUI versions for the portfolio.

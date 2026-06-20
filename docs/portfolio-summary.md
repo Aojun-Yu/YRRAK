@@ -15,7 +15,7 @@ YRRAK is an element-based card battle game where the player manages energy, bloc
 - Element advantage rules.
 - Damage, block, and healing card effects.
 - Enemy intent and behavior patterns.
-- Early Java Swing GUI prototyping.
+- Java Swing GUI prototyping with visual card buttons, enemy progress, reward choices, and battle logs.
 - In-game rules and final run summary.
 - Clear separation between game logic and console input/output.
 - Development documentation through README and DEVLOG files.
