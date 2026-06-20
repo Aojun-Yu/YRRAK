@@ -71,6 +71,9 @@ The game now has a playable console MVP:
 - Helper scripts were added:
   - `scripts/run.sh`
   - `scripts/demo.sh`
+- Cards now support healing.
+- `Healing Rain` now restores HP and still provides a small amount of block.
+- Player healing is capped at max HP.
 
 ### Next Small Goal
 

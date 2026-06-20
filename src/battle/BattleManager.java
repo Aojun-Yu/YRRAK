@@ -132,6 +132,7 @@ public class BattleManager {
         int finalDamage = card.calculateDamageAgainst(enemy);
         enemy.takeDamage(finalDamage);
         player.gainBlock(card.getBlock());
+        player.heal(card.getHeal());
 
         io.show("Played " + card.getName() + ".");
 
@@ -145,6 +146,10 @@ public class BattleManager {
 
         if (card.getBlock() > 0) {
             io.show("Gained " + card.getBlock() + " block.");
+        }
+
+        if (card.getHeal() > 0) {
+            io.show("Healed " + card.getHeal() + " HP.");
         }
 
         return true;
@@ -173,7 +178,8 @@ public class BattleManager {
                     + " [" + card.getElement().getDisplayName() + "]"
                     + " Cost: " + card.getCost()
                     + " Damage: " + card.getDamage()
-                    + " Block: " + card.getBlock());
+                    + " Block: " + card.getBlock()
+                    + " Heal: " + card.getHeal());
         }
     }
 
@@ -234,7 +240,8 @@ public class BattleManager {
                     + " [" + card.getElement().getDisplayName() + "]"
                     + " Cost: " + card.getCost()
                     + " Damage: " + card.getDamage()
-                    + " Block: " + card.getBlock());
+                    + " Block: " + card.getBlock()
+                    + " Heal: " + card.getHeal());
         }
 
         while (true) {
@@ -297,13 +304,13 @@ public class BattleManager {
         List<Card> rewards = new ArrayList<>();
 
         if (rewardCount == 0) {
-            rewards.add(new Card("Flame Surge", Element.FIRE, 2, 12, 0));
-            rewards.add(new Card("Healing Rain", Element.WATER, 1, 0, 8));
-            rewards.add(new Card("Quick Spark", Element.THUNDER, 0, 3, 0));
+            rewards.add(new Card("Flame Surge", Element.FIRE, 2, 12, 0, 0));
+            rewards.add(new Card("Healing Rain", Element.WATER, 1, 0, 3, 5));
+            rewards.add(new Card("Quick Spark", Element.THUNDER, 0, 3, 0, 0));
         } else {
-            rewards.add(new Card("Blazing Guard", Element.FIRE, 1, 4, 4));
-            rewards.add(new Card("Tidal Crash", Element.WATER, 2, 9, 2));
-            rewards.add(new Card("Storm Breaker", Element.THUNDER, 2, 11, 0));
+            rewards.add(new Card("Blazing Guard", Element.FIRE, 1, 4, 4, 0));
+            rewards.add(new Card("Tidal Crash", Element.WATER, 2, 9, 2, 0));
+            rewards.add(new Card("Storm Breaker", Element.THUNDER, 2, 11, 0, 0));
         }
 
         rewardCount++;
@@ -312,14 +319,14 @@ public class BattleManager {
 
     private List<Card> createStarterDeck() {
         List<Card> cards = new ArrayList<>();
-        cards.add(new Card("Fire Strike", Element.FIRE, 1, 6, 0));
-        cards.add(new Card("Water Shield", Element.WATER, 1, 0, 5));
-        cards.add(new Card("Thunder Bolt", Element.THUNDER, 2, 10, 0));
-        cards.add(new Card("River Blade", Element.WATER, 1, 4, 2));
-        cards.add(new Card("Storm Guard", Element.THUNDER, 2, 5, 5));
-        cards.add(new Card("Ember Guard", Element.FIRE, 1, 3, 3));
-        cards.add(new Card("Rain Lance", Element.WATER, 2, 8, 0));
-        cards.add(new Card("Spark Step", Element.THUNDER, 1, 4, 1));
+        cards.add(new Card("Fire Strike", Element.FIRE, 1, 6, 0, 0));
+        cards.add(new Card("Water Shield", Element.WATER, 1, 0, 5, 0));
+        cards.add(new Card("Thunder Bolt", Element.THUNDER, 2, 10, 0, 0));
+        cards.add(new Card("River Blade", Element.WATER, 1, 4, 2, 0));
+        cards.add(new Card("Storm Guard", Element.THUNDER, 2, 5, 5, 0));
+        cards.add(new Card("Ember Guard", Element.FIRE, 1, 3, 3, 0));
+        cards.add(new Card("Rain Lance", Element.WATER, 2, 8, 0, 0));
+        cards.add(new Card("Spark Step", Element.THUNDER, 1, 4, 1, 0));
         return cards;
     }
 

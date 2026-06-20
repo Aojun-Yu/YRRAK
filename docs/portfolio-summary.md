@@ -13,6 +13,7 @@ YRRAK is an element-based card battle game where the player manages energy, bloc
 - Turn-based combat logic.
 - Deck, hand, and discard pile management.
 - Element advantage rules.
+- Damage, block, and healing card effects.
 - Enemy intent and behavior patterns.
 - In-game rules and final run summary.
 - Clear separation between game logic and console input/output.

@@ -47,6 +47,15 @@ public class Player {
         block = block + amount;
     }
 
+    // 恢复生命值，但不能超过最大生命值
+    public void heal(int amount) {
+        health = health + amount;
+
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
+    }
+
     public boolean isAlive() {
         return health > 0;
     }

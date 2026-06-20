@@ -61,6 +61,7 @@ When a card has element advantage against an enemy, its damage is increased.
 - Player HP, max HP, energy, and block.
 - Enemy HP, element, intent, and behavior patterns.
 - Element advantage damage calculation.
+- Cards can deal damage, generate block, and heal the player.
 - Draw pile, hand, and discard pile.
 - Cards move to the discard pile after being played.
 - Discard pile recycles into the draw pile.

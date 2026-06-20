@@ -23,11 +23,11 @@ Enemy HP: 18/18 | Enemy: Training Dummy | Element: None
 Enemy intent: Attack for 4 damage
 Draw pile: 3 | Hand: 5 | Discard pile: 0
 Hand:
-1. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0
-2. Water Shield [Water] Cost: 1 Damage: 0 Block: 5
-3. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0
-4. River Blade [Water] Cost: 1 Damage: 4 Block: 2
-5. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5
+1. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
+2. Water Shield [Water] Cost: 1 Damage: 0 Block: 5 Heal: 0
+3. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0 Heal: 0
+4. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
+5. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Thunder Bolt.
 Dealt 10 damage.
@@ -37,10 +37,10 @@ Enemy HP: 8/18 | Enemy: Training Dummy | Element: None
 Enemy intent: Attack for 4 damage
 Draw pile: 3 | Hand: 4 | Discard pile: 1
 Hand:
-1. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0
-2. Water Shield [Water] Cost: 1 Damage: 0 Block: 5
-3. River Blade [Water] Cost: 1 Damage: 4 Block: 2
-4. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5
+1. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
+2. Water Shield [Water] Cost: 1 Damage: 0 Block: 5 Heal: 0
+3. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
+4. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Fire Strike.
 Dealt 6 damage.
@@ -61,11 +61,11 @@ Enemy HP: 2/18 | Enemy: Training Dummy | Element: None
 Enemy intent: Attack for 4 damage
 Draw pile: 3 | Hand: 5 | Discard pile: 0
 Hand:
-1. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3
-2. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0
-3. Spark Step [Thunder] Cost: 1 Damage: 4 Block: 1
-4. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0
-5. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0
+1. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
+2. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0 Heal: 0
+3. Spark Step [Thunder] Cost: 1 Damage: 4 Block: 1 Heal: 0
+4. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0 Heal: 0
+5. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Ember Guard.
 Dealt 3 damage.
@@ -78,9 +78,9 @@ Player HP: 26/30
 Reward
 ----------------------------------------
 Choose one reward card:
-1. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0
-2. Healing Rain [Water] Cost: 1 Damage: 0 Block: 8
-3. Quick Spark [Thunder] Cost: 0 Damage: 3 Block: 0
+1. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0 Heal: 0
+2. Healing Rain [Water] Cost: 1 Damage: 0 Block: 3 Heal: 5
+3. Quick Spark [Thunder] Cost: 0 Damage: 3 Block: 0 Heal: 0
 Flame Surge was added to your discard pile.
 
 ----------------------------------------
@@ -99,11 +99,11 @@ Enemy HP: 20/20 | Enemy: Fire Spirit | Element: Fire
 Enemy intent: Attack for 5 damage
 Draw pile: 4 | Hand: 5 | Discard pile: 0
 Hand:
-1. Water Shield [Water] Cost: 1 Damage: 0 Block: 5
-2. River Blade [Water] Cost: 1 Damage: 4 Block: 2
-3. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5
-4. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3
-5. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0
+1. Water Shield [Water] Cost: 1 Damage: 0 Block: 5 Heal: 0
+2. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
+3. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
+4. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
+5. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
 Played River Blade.
 Dealt 6 damage.
@@ -115,10 +115,10 @@ Enemy HP: 14/20 | Enemy: Fire Spirit | Element: Fire
 Enemy intent: Attack for 5 damage
 Draw pile: 4 | Hand: 4 | Discard pile: 1
 Hand:
-1. Water Shield [Water] Cost: 1 Damage: 0 Block: 5
-2. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5
-3. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3
-4. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0
+1. Water Shield [Water] Cost: 1 Damage: 0 Block: 5 Heal: 0
+2. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
+3. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
+4. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Flame Surge.
 Dealt 12 damage.
@@ -139,11 +139,11 @@ Enemy HP: 2/20 | Enemy: Fire Spirit | Element: Fire
 Enemy intent: Attack for 5 damage
 Draw pile: 4 | Hand: 5 | Discard pile: 0
 Hand:
-1. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0
-2. Spark Step [Thunder] Cost: 1 Damage: 4 Block: 1
-3. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0
-4. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0
-5. River Blade [Water] Cost: 1 Damage: 4 Block: 2
+1. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0 Heal: 0
+2. Spark Step [Thunder] Cost: 1 Damage: 4 Block: 1 Heal: 0
+3. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0 Heal: 0
+4. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
+5. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Rain Lance.
 Dealt 12 damage.
@@ -156,9 +156,9 @@ Player HP: 23/30
 Reward
 ----------------------------------------
 Choose one reward card:
-1. Blazing Guard [Fire] Cost: 1 Damage: 4 Block: 4
-2. Tidal Crash [Water] Cost: 2 Damage: 9 Block: 2
-3. Storm Breaker [Thunder] Cost: 2 Damage: 11 Block: 0
+1. Blazing Guard [Fire] Cost: 1 Damage: 4 Block: 4 Heal: 0
+2. Tidal Crash [Water] Cost: 2 Damage: 9 Block: 2 Heal: 0
+3. Storm Breaker [Thunder] Cost: 2 Damage: 11 Block: 0 Heal: 0
 Blazing Guard was added to your discard pile.
 
 ----------------------------------------
@@ -177,11 +177,11 @@ Enemy HP: 24/24 | Enemy: Thunder Beast | Element: Thunder
 Enemy intent: Attack for 5 damage
 Draw pile: 5 | Hand: 5 | Discard pile: 0
 Hand:
-1. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0
-2. Water Shield [Water] Cost: 1 Damage: 0 Block: 5
-3. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5
-4. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3
-5. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0
+1. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0 Heal: 0
+2. Water Shield [Water] Cost: 1 Damage: 0 Block: 5 Heal: 0
+3. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
+4. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
+5. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Flame Surge.
 Dealt 18 damage.
@@ -192,10 +192,10 @@ Enemy HP: 6/24 | Enemy: Thunder Beast | Element: Thunder
 Enemy intent: Attack for 5 damage
 Draw pile: 5 | Hand: 4 | Discard pile: 1
 Hand:
-1. Water Shield [Water] Cost: 1 Damage: 0 Block: 5
-2. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5
-3. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3
-4. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0
+1. Water Shield [Water] Cost: 1 Damage: 0 Block: 5 Heal: 0
+2. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
+3. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
+4. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Ember Guard.
 Dealt 4 damage.
@@ -217,11 +217,11 @@ Enemy HP: 2/24 | Enemy: Thunder Beast | Element: Thunder
 Enemy intent: Charged Strike for 9 damage
 Draw pile: 0 | Hand: 5 | Discard pile: 5
 Hand:
-1. Blazing Guard [Fire] Cost: 1 Damage: 4 Block: 4
-2. Spark Step [Thunder] Cost: 1 Damage: 4 Block: 1
-3. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0
-4. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0
-5. River Blade [Water] Cost: 1 Damage: 4 Block: 2
+1. Blazing Guard [Fire] Cost: 1 Damage: 4 Block: 4 Heal: 0
+2. Spark Step [Thunder] Cost: 1 Damage: 4 Block: 1 Heal: 0
+3. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0 Heal: 0
+4. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
+5. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
 Choose a card number, or 0 to end turn:
 Played Blazing Guard.
 Dealt 6 damage.
