@@ -71,6 +71,7 @@ When a card has element advantage against an enemy, its damage is increased.
 - In-game rule explanation at startup.
 - Final run summary with enemies defeated, cards played, rewards chosen, and final HP.
 - Input/output abstraction through `GameIO` for future GUI support.
+- A small Java Swing GUI prototype for a single visual battle.
 
 ## Enemy Behavior
 
@@ -90,6 +91,8 @@ src/
 │   ├── Element.java
 │   ├── Enemy.java
 │   └── Player.java
+├── gui/
+│   └── GuiMain.java
 └── util/
     ├── ConsoleGameIO.java
     └── GameIO.java
@@ -103,6 +106,7 @@ Class responsibilities:
 - `model.Enemy`: stores enemy state, element, intent, and behavior pattern.
 - `model.Card`: stores card stats and calculates element advantage damage.
 - `model.Element`: defines elements and advantage rules.
+- `gui.GuiMain`: runs a small Java Swing battle prototype.
 - `util.GameIO`: separates game logic from input/output.
 - `util.ConsoleGameIO`: console implementation of `GameIO`.
 
@@ -118,6 +122,12 @@ To run the prepared demo path:
 
 ```bash
 ./scripts/demo.sh
+```
+
+To run the GUI prototype:
+
+```bash
+./scripts/gui.sh
 ```
 
 Manual compile and run commands:

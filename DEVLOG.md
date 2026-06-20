@@ -74,7 +74,9 @@ The game now has a playable console MVP:
 - Cards now support healing.
 - `Healing Rain` now restores HP and still provides a small amount of block.
 - Player healing is capped at max HP.
+- Added a small Java Swing GUI prototype in `gui.GuiMain`.
+- Added `scripts/gui.sh` to launch the GUI prototype.
 
 ### Next Small Goal
 
-Prepare screenshots or a short gameplay recording.
+Improve the GUI prototype or capture screenshots for the portfolio.

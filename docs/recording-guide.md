@@ -32,6 +32,12 @@ To auto-play the prepared demo path:
 ./scripts/demo.sh
 ```
 
+To show the early GUI prototype:
+
+```bash
+./scripts/gui.sh
+```
+
 ## Suggested Screenshots
 
 - Startup rules.
