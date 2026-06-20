@@ -71,7 +71,7 @@ When a card has element advantage against an enemy, its damage is increased.
 - In-game rule explanation at startup.
 - Final run summary with enemies defeated, cards played, rewards chosen, and final HP.
 - Input/output abstraction through `GameIO` for future GUI support.
-- A small Java Swing GUI prototype with three enemies, reward choices, and battle logs.
+- A styled Java Swing GUI prototype with three enemies, reward choices, colored card buttons, and battle logs.
 
 ## Enemy Behavior
 

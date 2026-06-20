@@ -77,7 +77,8 @@ The game now has a playable console MVP:
 - Added a small Java Swing GUI prototype in `gui.GuiMain`.
 - Added `scripts/gui.sh` to launch the GUI prototype.
 - The GUI prototype now supports three enemies, reward card choices, and a victory/game-over log.
+- The GUI prototype now has a basic dark theme, colored card buttons, styled panels, and improved log readability.
 
 ### Next Small Goal
 
-Capture screenshots of the console and GUI versions for the portfolio.
+Capture screenshots of the console and styled GUI versions for the portfolio.

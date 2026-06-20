@@ -19,6 +19,19 @@ public class GuiMain {
     }
 
     private static class GameFrame extends JFrame {
+        private static final Color BACKGROUND = new Color(15, 18, 32);
+        private static final Color PANEL = new Color(28, 34, 56);
+        private static final Color PANEL_DARK = new Color(18, 22, 38);
+        private static final Color TEXT = new Color(232, 238, 255);
+        private static final Color MUTED_TEXT = new Color(172, 184, 215);
+        private static final Color ACCENT = new Color(96, 204, 255);
+        private static final Color FIRE = new Color(255, 126, 78);
+        private static final Color WATER = new Color(92, 174, 255);
+        private static final Color THUNDER = new Color(255, 218, 92);
+        private static final Font TITLE_FONT = new Font("SansSerif", Font.BOLD, 15);
+        private static final Font BODY_FONT = new Font("SansSerif", Font.PLAIN, 13);
+        private static final Font CARD_FONT = new Font("SansSerif", Font.PLAIN, 12);
+
         private final Player player;
         private final List<Enemy> enemies;
         private final List<Card> hand;
@@ -52,7 +65,8 @@ public class GuiMain {
             setTitle("YRRAK GUI Prototype");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setLayout(new BorderLayout(12, 12));
-            setMinimumSize(new Dimension(760, 520));
+            setMinimumSize(new Dimension(860, 600));
+            getContentPane().setBackground(BACKGROUND);
 
             buildLayout();
             refreshView();
@@ -62,7 +76,11 @@ public class GuiMain {
 
         private void buildLayout() {
             JPanel statusPanel = new JPanel(new GridLayout(4, 1, 4, 4));
-            statusPanel.setBorder(BorderFactory.createTitledBorder("Battle Status"));
+            stylePanel(statusPanel, "Battle Status");
+            styleStatusLabel(progressLabel);
+            styleStatusLabel(playerStatusLabel);
+            styleStatusLabel(enemyStatusLabel);
+            styleStatusLabel(intentLabel);
             statusPanel.add(progressLabel);
             statusPanel.add(playerStatusLabel);
             statusPanel.add(enemyStatusLabel);
@@ -71,16 +89,23 @@ public class GuiMain {
             logArea.setEditable(false);
             logArea.setLineWrap(true);
             logArea.setWrapStyleWord(true);
+            logArea.setBackground(PANEL_DARK);
+            logArea.setForeground(TEXT);
+            logArea.setCaretColor(TEXT);
+            logArea.setFont(new Font("Monospaced", Font.PLAIN, 13));
             JScrollPane logScrollPane = new JScrollPane(logArea);
-            logScrollPane.setBorder(BorderFactory.createTitledBorder("Battle Log"));
+            logScrollPane.getViewport().setBackground(PANEL_DARK);
+            styleScrollPane(logScrollPane, "Battle Log");
 
-            handPanel.setBorder(BorderFactory.createTitledBorder("Hand"));
-            rewardPanel.setBorder(BorderFactory.createTitledBorder("Rewards"));
+            stylePanel(handPanel, "Hand");
+            stylePanel(rewardPanel, "Rewards");
 
             JButton endTurnButton = new JButton("End Turn");
             endTurnButton.addActionListener(event -> runEnemyTurn());
+            styleButton(endTurnButton, ACCENT);
 
             JPanel bottomPanel = new JPanel(new BorderLayout(8, 8));
+            bottomPanel.setBackground(BACKGROUND);
             bottomPanel.add(handPanel, BorderLayout.CENTER);
             bottomPanel.add(rewardPanel, BorderLayout.NORTH);
             bottomPanel.add(endTurnButton, BorderLayout.SOUTH);
@@ -117,6 +142,7 @@ public class GuiMain {
                 JButton cardButton = new JButton(buildCardText(card));
                 cardButton.addActionListener(event -> playCard(card));
                 cardButton.setEnabled(gameActive && rewardPanel.getComponentCount() == 0);
+                styleButton(cardButton, colorForElement(card.getElement()));
                 handPanel.add(cardButton);
             }
 
@@ -207,6 +233,7 @@ public class GuiMain {
             for (Card reward : createRewardChoices()) {
                 JButton rewardButton = new JButton(buildCardText(reward));
                 rewardButton.addActionListener(event -> chooseReward(reward));
+                styleButton(rewardButton, colorForElement(reward.getElement()));
                 rewardPanel.add(rewardButton);
             }
 
@@ -236,6 +263,59 @@ public class GuiMain {
                     + " | Block " + card.getBlock()
                     + " | Heal " + card.getHeal()
                     + "</html>";
+        }
+
+        private void stylePanel(JPanel panel, String title) {
+            panel.setBackground(PANEL);
+            panel.setForeground(TEXT);
+            panel.setBorder(BorderFactory.createTitledBorder(
+                    BorderFactory.createLineBorder(ACCENT),
+                    title,
+                    0,
+                    0,
+                    TITLE_FONT,
+                    TEXT));
+        }
+
+        private void styleScrollPane(JScrollPane scrollPane, String title) {
+            scrollPane.setBorder(BorderFactory.createTitledBorder(
+                    BorderFactory.createLineBorder(ACCENT),
+                    title,
+                    0,
+                    0,
+                    TITLE_FONT,
+                    TEXT));
+        }
+
+        private void styleStatusLabel(JLabel label) {
+            label.setForeground(MUTED_TEXT);
+            label.setFont(BODY_FONT);
+        }
+
+        private void styleButton(JButton button, Color color) {
+            button.setBackground(color);
+            button.setForeground(Color.BLACK);
+            button.setFocusPainted(false);
+            button.setFont(CARD_FONT);
+            button.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(color.darker()),
+                    BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+        }
+
+        private Color colorForElement(Element element) {
+            if (element == Element.FIRE) {
+                return FIRE;
+            }
+
+            if (element == Element.WATER) {
+                return WATER;
+            }
+
+            if (element == Element.THUNDER) {
+                return THUNDER;
+            }
+
+            return ACCENT;
         }
 
         private void addLog(String message) {

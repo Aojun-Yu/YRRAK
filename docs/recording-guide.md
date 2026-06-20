@@ -38,7 +38,7 @@ To show the early GUI prototype:
 ./scripts/gui.sh
 ```
 
-The GUI prototype now supports a visual three-enemy run with reward choices. It is intended as an early interface demo, while the console version remains the more complete rules reference.
+The GUI prototype now supports a visual three-enemy run with reward choices and basic styling. It is intended as an early interface demo, while the console version remains the more complete rules reference.
 
 ## Suggested Screenshots
 
