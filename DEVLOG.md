@@ -33,6 +33,42 @@ The game should not depend only on standard card combat. A possible original dir
 - Methods reduce repeated code and make the program easier to extend.
 - `Math.min()` is useful when one value should not exceed another, such as block absorbing damage.
 
+### MVP Refactor
+
+The project was reorganized into a clearer object-oriented structure:
+
+- `model` contains game data classes.
+- `battle` contains the combat flow.
+- `util` contains input/output helpers.
+- `Main` only starts the game.
+
+The game now has a playable console MVP:
+
+- Three core elements: Fire, Water, and Thunder.
+- Element advantage increases damage.
+- Player turns allow choosing cards from a hand.
+- The game now has a draw pile, hand, and discard pile.
+- Played cards move to the discard pile.
+- The discard pile is recycled when the draw pile is empty.
+- Enemy turns automatically attack.
+- Enemy intent is shown during the player turn.
+- Enemies now have simple behavior patterns based on their turn count.
+- Fire Spirit uses a stronger attack every third enemy turn.
+- Thunder Beast alternates between quick attacks and charged strikes.
+- The player wins after defeating three enemies.
+- After defeating an enemy, the player can choose one reward card.
+- Reward cards are added to the discard pile so they enter the deck cycle later.
+- Console output now has clearer section titles for battles, player turns, enemy turns, rewards, victory, and game over.
+- The game now explains its rules at startup.
+- The game now shows a final run summary with enemies defeated, cards played, rewards chosen, and final HP.
+- Input/output goes through `GameIO`, which makes future GUI work easier.
+- README was reorganized into a clearer portfolio-style project page with gameplay, code structure, running instructions, and future plans.
+- Portfolio support files were added:
+  - `docs/portfolio-summary.md`
+  - `docs/demo-output.txt`
+  - `docs/demo-input.txt`
+  - `docs/recording-guide.md`
+
 ### Next Small Goal
 
-Add `maxEnergy` to `Player` so `restoreEnergy()` can restore energy without receiving a hard-coded number from `Main`.
+Commit the cleaned MVP and prepare screenshots or a short gameplay recording.
