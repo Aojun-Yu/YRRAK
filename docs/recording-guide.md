@@ -21,11 +21,16 @@ Use this guide to record a short portfolio demo.
 Run the project:
 
 ```bash
-javac -encoding UTF-8 -d out/production/YRRAK $(find src -name "*.java")
-java -cp out/production/YRRAK Main
+./scripts/run.sh
 ```
 
 Use the input sequence in `docs/demo-input.txt` for a reliable victory path.
+
+To auto-play the prepared demo path:
+
+```bash
+./scripts/demo.sh
+```
 
 ## Suggested Screenshots
 

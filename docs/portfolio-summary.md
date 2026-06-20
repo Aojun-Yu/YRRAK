@@ -38,3 +38,5 @@ Helpful files:
 - `docs/demo-output.txt`: sample winning run.
 - `docs/demo-input.txt`: input sequence used for the sample run.
 - `docs/recording-guide.md`: suggested recording plan.
+- `scripts/run.sh`: compile and run the game.
+- `scripts/demo.sh`: compile and run the prepared demo path.

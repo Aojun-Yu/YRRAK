@@ -1,54 +1,162 @@
 # YRRAK
 
-YRRAK is an original card roguelike prototype built in Java.
+YRRAK is a small playable Java console game prototype built as a portfolio project.
 
-The current version focuses on a small turn-based combat system. The long-term goal is to grow it into a complete playable game with original card mechanics, enemy behavior, progression, and a visual interface.
+It is an element-based card battle game where the player defeats three enemies in a row by managing energy, block, card choices, deck cycling, and elemental advantages.
 
-## Project Goals
+## Project Purpose
 
-- Build a card roguelike from the ground up in Java.
-- Practice object-oriented programming through real gameplay systems.
-- Design original mechanics instead of only copying existing card games.
-- Keep a clear development record for a future portfolio or college application.
+This project is designed as a college portfolio piece, not a commercial game.
+
+The main goals are:
+
+- Build a complete small game from the ground up.
+- Practice Java object-oriented programming through real gameplay systems.
+- Show clear engineering structure instead of putting everything in `Main.java`.
+- Create a project that can later grow into a Java Swing GUI version.
+- Keep development notes that show learning, iteration, and design decisions.
+
+## Gameplay Summary
+
+The player fights three enemies:
+
+1. Training Dummy
+2. Fire Spirit
+3. Thunder Beast
+
+Each player turn:
+
+- Energy is restored.
+- Cards are drawn into the hand.
+- The player chooses cards to play.
+- Cards can deal damage, generate block, or both.
+
+Each enemy turn:
+
+- The enemy performs its shown intent.
+- Block absorbs damage before HP is reduced.
+
+The player wins by defeating all three enemies.
+
+## Element System
+
+The game currently has three main elements:
+
+- Fire
+- Water
+- Thunder
+
+Element advantage:
+
+- Fire beats Thunder.
+- Thunder beats Water.
+- Water beats Fire.
+
+When a card has element advantage against an enemy, its damage is increased.
 
 ## Current Features
 
-- Player health and energy.
-- Enemy health and attack damage.
-- Cards with damage, block, and energy cost.
-- Energy checks before playing a card.
-- Block absorbs damage before health is reduced.
-- Player and enemy defeat checks.
-- Simple turn simulation in the console.
+- Playable console MVP.
+- Turn-based player and enemy flow.
+- Player HP, max HP, energy, and block.
+- Enemy HP, element, intent, and behavior patterns.
+- Element advantage damage calculation.
+- Draw pile, hand, and discard pile.
+- Cards move to the discard pile after being played.
+- Discard pile recycles into the draw pile.
+- Reward card choices after defeated enemies.
+- Victory and game-over conditions.
+- Clear console sections for battles, turns, rewards, victory, and defeat.
+- In-game rule explanation at startup.
+- Final run summary with enemies defeated, cards played, rewards chosen, and final HP.
+- Input/output abstraction through `GameIO` for future GUI support.
 
-## Original Design Direction
+## Enemy Behavior
 
-The project may include special double-sided cards as one card type.
+- `Training Dummy`: always uses a normal attack.
+- `Fire Spirit`: uses a stronger Flame Burst every third enemy turn.
+- `Thunder Beast`: alternates between quick attacks and Charged Strike.
 
-Double-sided cards are not meant to replace all cards. They are designed to create future consequences: using a powerful front side can flip the card into a weaker, defensive, or risky back side.
+## Code Structure
 
-## Current Classes
+```text
+src/
+├── Main.java
+├── battle/
+│   └── BattleManager.java
+├── model/
+│   ├── Card.java
+│   ├── Element.java
+│   ├── Enemy.java
+│   └── Player.java
+└── util/
+    ├── ConsoleGameIO.java
+    └── GameIO.java
+```
 
-- `Main`: Runs the current combat test.
-- `Player`: Stores player health, energy, block, and survival logic.
-- `Enemy`: Stores enemy health, attack damage, and survival logic.
-- `Card`: Stores card name, damage, block, and energy cost.
-- `Element`: Reserved for a future element system.
+Class responsibilities:
 
-## Next Steps
-
-- Add `maxEnergy` to the player.
-- Create a real turn structure.
-- Add a hand, deck, discard pile, and draw pile.
-- Add more card types.
-- Add multiple enemies and target selection.
-- Build a visual version after the console prototype is stable.
+- `Main`: starts the game.
+- `battle.BattleManager`: controls battle flow, turns, rewards, and deck movement.
+- `model.Player`: stores player state and damage/block logic.
+- `model.Enemy`: stores enemy state, element, intent, and behavior pattern.
+- `model.Card`: stores card stats and calculates element advantage damage.
+- `model.Element`: defines elements and advantage rules.
+- `util.GameIO`: separates game logic from input/output.
+- `util.ConsoleGameIO`: console implementation of `GameIO`.
 
 ## How to Run
 
-Compile and run from the project root:
+From the project root:
 
 ```bash
-javac -encoding UTF-8 -d out/production/YRRAK src/*.java
+./scripts/run.sh
+```
+
+To run the prepared demo path:
+
+```bash
+./scripts/demo.sh
+```
+
+Manual compile and run commands:
+
+```bash
+javac -encoding UTF-8 -d out/production/YRRAK $(find src -name "*.java")
 java -cp out/production/YRRAK Main
 ```
+
+## Controls
+
+During the player turn:
+
+- Enter a card number to play that card.
+- Enter `0` to end the turn.
+
+## Example Output
+
+```text
+----------------------------------------
+Battle 1 of 3
+----------------------------------------
+A new enemy appears: Training Dummy [None]
+
+Player HP: 30/30 | Block: 0 | Energy: 3/3
+Enemy HP: 18/18 | Enemy: Training Dummy | Element: None
+Enemy intent: Attack for 4 damage
+```
+
+For a full sample run, see `docs/demo-output.txt`.
+
+## Future Plans
+
+- Add more card types.
+- Add more enemy actions.
+- Add screenshots or a short gameplay recording.
+- Clean up the repository before uploading to GitHub.
+- Build a Java Swing GUI after the console version is stable.
+- Consider double-sided cards as a special future card type.
+
+## Development Notes
+
+See `DEVLOG.md` for the development log and design notes.

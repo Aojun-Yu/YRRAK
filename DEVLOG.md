@@ -68,7 +68,10 @@ The game now has a playable console MVP:
   - `docs/demo-output.txt`
   - `docs/demo-input.txt`
   - `docs/recording-guide.md`
+- Helper scripts were added:
+  - `scripts/run.sh`
+  - `scripts/demo.sh`
 
 ### Next Small Goal
 
-Commit the cleaned MVP and prepare screenshots or a short gameplay recording.
+Prepare screenshots or a short gameplay recording.
