@@ -82,3 +82,39 @@ The game now has a playable console MVP:
 ### Next Small Goal
 
 Capture screenshots of the console and styled GUI versions for the portfolio.
+
+## 2026-06-22
+
+### Current Focus
+
+Preparing the project for GitHub and university application presentation.
+
+### What Was Implemented
+
+- Added generated placeholder art for element icons, character portraits, background, and card frame.
+- Added GUI support for loading assets from the `assets/` folder.
+- Added custom card button rendering so cards look more like game cards.
+- Added lightweight generated sound effects and looping background music.
+- Fixed card readability when the player does not have enough energy by keeping card text white.
+- Added a Java asset generator in `tools/AssetGenerator.java`.
+- Updated README and project status documentation.
+- Added application-focused documentation:
+  - `docs/portfolio-summary.md`
+  - `docs/application-reflection.md`
+  - `docs/recording-guide.md`
+  - `docs/art-direction.md`
+
+### Design Notes
+
+The project is now positioned as a compact Java portfolio game rather than a commercial-scale game. The priority is to show a complete, readable, and presentable project with clear object-oriented structure, not to add large features too early.
+
+### Programming Lessons
+
+- GUI polish can create technical issues, such as Swing changing disabled button text colors.
+- Keeping UI state readable sometimes requires custom rendering rather than default component behavior.
+- Generating placeholder assets in code can make a project more presentable without introducing licensing problems.
+- Application projects need documentation and reflection, not only working code.
+
+### Next Small Goal
+
+Capture screenshots and record a 45-60 second GUI demo video.

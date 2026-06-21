@@ -138,3 +138,15 @@ Still planned:
 ## Portfolio Notes
 
 YRRAK is designed to show consistent iteration rather than one large final product. The most important parts of the project are the clean Java structure, the playable game loop, and the ability to expand from console gameplay into a GUI-based desktop game.
+
+## Portfolio Materials
+
+Additional application and presentation materials are included in the `docs/` folder:
+
+- `docs/portfolio-summary.md`: English project summary for a portfolio page.
+- `docs/application-reflection.md`: design reflection, challenges, limitations, and interview talking points.
+- `docs/recording-guide.md`: 45-60 second demo video script and screenshot plan.
+- `docs/art-direction.md`: visual direction and asset plan.
+- `docs/how-to-run.md`: detailed running instructions.
+
+These documents are intended to help present the project clearly for a university application, GitHub portfolio, or project interview.
