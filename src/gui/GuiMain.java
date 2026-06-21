@@ -1,6 +1,8 @@
 package gui;
 
 import battle.DeckManager;
+import battle.BattleActions;
+import battle.CardPlayResult;
 import battle.GameContent;
 import battle.GameState;
 import model.Card;
@@ -232,40 +234,16 @@ public class GuiMain {
         }
 
         private void playCard(Card card) {
-            Player player = state.getPlayer();
             Enemy enemy = state.currentEnemy();
-            DeckManager deckManager = state.getDeckManager();
+            CardPlayResult result = BattleActions.playCard(state, card, enemy);
 
-            if (!player.canSpendEnergy(card.getCost())) {
-                addLog("Not enough Energy for " + card.getName() + ".");
+            for (String line : result.getLogLines()) {
+                addLog(line);
+            }
+
+            if (!result.isSuccess()) {
+                refreshView();
                 return;
-            }
-
-            player.spendEnergy(card.getCost());
-            deckManager.moveFromHandToDiscard(card);
-            state.recordPlayedCard();
-
-            int finalDamage = card.calculateDamageAgainst(enemy);
-            enemy.takeDamage(finalDamage);
-            player.gainBlock(card.getBlock());
-            player.heal(card.getHeal());
-
-            addLog("Played " + card.getName() + " for " + card.getCost() + " Energy.");
-
-            if (finalDamage > 0) {
-                addLog("Dealt " + finalDamage + " damage.");
-            }
-
-            if (card.hasAdvantageAgainst(enemy)) {
-                addLog("Element advantage: damage increased.");
-            }
-
-            if (card.getBlock() > 0) {
-                addLog("Gained " + card.getBlock() + " Block.");
-            }
-
-            if (card.getHeal() > 0) {
-                addLog("Healed " + card.getHeal() + " HP.");
             }
 
             if (!enemy.isAlive()) {

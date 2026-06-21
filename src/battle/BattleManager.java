@@ -88,9 +88,8 @@ public class BattleManager {
             }
 
             Card selectedCard = deckManager.getHand().get(choice - 1);
-            if (playCard(selectedCard, enemy)) {
-                deckManager.moveFromHandToDiscard(selectedCard);
-            }
+            CardPlayResult result = BattleActions.playCard(state, selectedCard, enemy);
+            showCardPlayResult(result);
         }
 
         if (player.getEnergy() == 0 && enemy.isAlive()) {
@@ -111,41 +110,10 @@ public class BattleManager {
         enemy.finishTurn();
     }
 
-    private boolean playCard(Card card, Enemy enemy) {
-        Player player = state.getPlayer();
-
-        if (!player.canSpendEnergy(card.getCost())) {
-            io.show("Not enough energy.");
-            return false;
+    private void showCardPlayResult(CardPlayResult result) {
+        for (String line : result.getLogLines()) {
+            io.show(line);
         }
-
-        player.spendEnergy(card.getCost());
-        state.recordPlayedCard();
-
-        int finalDamage = card.calculateDamageAgainst(enemy);
-        enemy.takeDamage(finalDamage);
-        player.gainBlock(card.getBlock());
-        player.heal(card.getHeal());
-
-        io.show("Played " + card.getName() + ".");
-
-        if (finalDamage > 0) {
-            io.show("Dealt " + finalDamage + " damage.");
-        }
-
-        if (card.hasAdvantageAgainst(enemy)) {
-            io.show("Element advantage!");
-        }
-
-        if (card.getBlock() > 0) {
-            io.show("Gained " + card.getBlock() + " block.");
-        }
-
-        if (card.getHeal() > 0) {
-            io.show("Healed " + card.getHeal() + " HP.");
-        }
-
-        return true;
     }
 
     private void showBattleState(Enemy enemy) {

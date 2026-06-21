@@ -29,7 +29,7 @@ Hand:
 4. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
 5. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Thunder Bolt.
+Played Thunder Bolt for 2 Energy.
 Dealt 10 damage.
 
 Player HP: 30/30 | Block: 0 | Energy: 1/3
@@ -42,7 +42,7 @@ Hand:
 3. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
 4. Storm Guard [Thunder] Cost: 2 Damage: 5 Block: 5 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Fire Strike.
+Played Fire Strike for 1 Energy.
 Dealt 6 damage.
 No energy left.
 
@@ -67,9 +67,9 @@ Hand:
 4. Thunder Bolt [Thunder] Cost: 2 Damage: 10 Block: 0 Heal: 0
 5. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Ember Guard.
+Played Ember Guard for 1 Energy.
 Dealt 3 damage.
-Gained 3 block.
+Gained 3 Block.
 ----------------------------------------
 Training Dummy defeated. (1/3)
 Player HP: 26/30
@@ -105,10 +105,10 @@ Hand:
 4. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
 5. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
-Played River Blade.
+Played River Blade for 1 Energy.
 Dealt 6 damage.
-Element advantage!
-Gained 2 block.
+Element advantage: damage increased.
+Gained 2 Block.
 
 Player HP: 26/30 | Block: 2 | Energy: 2/3
 Enemy HP: 14/20 | Enemy: Fire Spirit | Element: Fire
@@ -120,7 +120,7 @@ Hand:
 3. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
 4. Flame Surge [Fire] Cost: 2 Damage: 12 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Flame Surge.
+Played Flame Surge for 2 Energy.
 Dealt 12 damage.
 No energy left.
 
@@ -145,9 +145,9 @@ Hand:
 4. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
 5. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Rain Lance.
+Played Rain Lance for 2 Energy.
 Dealt 12 damage.
-Element advantage!
+Element advantage: damage increased.
 ----------------------------------------
 Fire Spirit defeated. (2/3)
 Player HP: 23/30
@@ -183,9 +183,9 @@ Hand:
 4. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
 5. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Flame Surge.
+Played Flame Surge for 2 Energy.
 Dealt 18 damage.
-Element advantage!
+Element advantage: damage increased.
 
 Player HP: 23/30 | Block: 0 | Energy: 1/3
 Enemy HP: 6/24 | Enemy: Thunder Beast | Element: Thunder
@@ -197,10 +197,10 @@ Hand:
 3. Ember Guard [Fire] Cost: 1 Damage: 3 Block: 3 Heal: 0
 4. Rain Lance [Water] Cost: 2 Damage: 8 Block: 0 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Ember Guard.
+Played Ember Guard for 1 Energy.
 Dealt 4 damage.
-Element advantage!
-Gained 3 block.
+Element advantage: damage increased.
+Gained 3 Block.
 No energy left.
 
 ----------------------------------------
@@ -223,10 +223,10 @@ Hand:
 4. Fire Strike [Fire] Cost: 1 Damage: 6 Block: 0 Heal: 0
 5. River Blade [Water] Cost: 1 Damage: 4 Block: 2 Heal: 0
 Choose a card number, or 0 to end turn:
-Played Blazing Guard.
+Played Blazing Guard for 1 Energy.
 Dealt 6 damage.
-Element advantage!
-Gained 4 block.
+Element advantage: damage increased.
+Gained 4 Block.
 ----------------------------------------
 Thunder Beast defeated. (3/3)
 Player HP: 21/30
