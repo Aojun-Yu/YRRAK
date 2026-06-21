@@ -1,71 +1,60 @@
 package battle;
 
 import model.Card;
-import model.Element;
 import model.Enemy;
 import model.Player;
 import util.GameIO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BattleManager {
+    private static final int CARDS_PER_TURN = 5;
+
     private final GameIO io;
-    private final Player player;
-    private final List<Card> drawPile;
-    private final List<Card> hand;
-    private final List<Card> discardPile;
-    private final List<Enemy> enemies;
-    private int rewardCount;
-    private int playedCards;
-    private int selectedRewards;
+    private final GameState state;
 
     public BattleManager(GameIO io) {
         this.io = io;
-        this.player = new Player(30, 3);
-        this.drawPile = createStarterDeck();
-        this.hand = new ArrayList<>();
-        this.discardPile = new ArrayList<>();
-        this.enemies = createEnemies();
-        this.rewardCount = 0;
-        this.playedCards = 0;
-        this.selectedRewards = 0;
+        state = new GameState(false);
     }
 
     public void runGame() {
         showSectionTitle("YRRAK: Element Card Prototype");
         showRules();
 
-        int defeatedEnemies = 0;
-
-        for (Enemy enemy : enemies) {
-            showSectionTitle("Battle " + (defeatedEnemies + 1) + " of " + enemies.size());
+        while (!state.isVictory()) {
+            Enemy enemy = state.currentEnemy();
+            showSectionTitle("Battle " + (state.getCurrentEnemyIndex() + 1) + " of " + state.getEnemyCount());
             showEnemyIntro(enemy);
 
-            runBattle(enemy);
+            runBattle();
 
-            if (!player.isAlive()) {
+            if (!state.getPlayer().isAlive()) {
                 showSectionTitle("Game Over");
-                io.show("You were defeated after defeating " + defeatedEnemies + " enemies.");
-                showFinalSummary(defeatedEnemies);
+                io.show("You were defeated after defeating " + state.getCurrentEnemyIndex() + " enemies.");
+                showFinalSummary();
                 return;
             }
 
-            defeatedEnemies++;
-            showBattleResult(enemy, defeatedEnemies);
+            state.advanceEnemy();
+            showBattleResult(enemy);
 
-            if (defeatedEnemies < enemies.size()) {
+            if (!state.isVictory()) {
                 chooseRewardCard();
             }
         }
 
         showSectionTitle("Victory");
+        Player player = state.getPlayer();
         io.show("You defeated all enemies with " + player.getHealth()
                 + "/" + player.getMaxHealth() + " HP remaining.");
-        showFinalSummary(defeatedEnemies);
+        showFinalSummary();
     }
 
-    private void runBattle(Enemy enemy) {
+    private void runBattle() {
+        Enemy enemy = state.currentEnemy();
+        Player player = state.getPlayer();
+
         while (player.isAlive() && enemy.isAlive()) {
             startPlayerTurn();
             runPlayerTurn(enemy);
@@ -78,8 +67,10 @@ public class BattleManager {
 
     private void runPlayerTurn(Enemy enemy) {
         showSectionTitle("Player Turn");
+        Player player = state.getPlayer();
+        DeckManager deckManager = state.getDeckManager();
 
-        while (player.getEnergy() > 0 && enemy.isAlive() && !hand.isEmpty()) {
+        while (player.getEnergy() > 0 && enemy.isAlive() && deckManager.getHandSize() > 0) {
             showBattleState(enemy);
             showHand();
             io.show("Choose a card number, or 0 to end turn:");
@@ -91,15 +82,14 @@ public class BattleManager {
                 return;
             }
 
-            if (choice < 1 || choice > hand.size()) {
+            if (choice < 1 || choice > deckManager.getHandSize()) {
                 io.show("Invalid choice.");
                 continue;
             }
 
-            Card selectedCard = hand.get(choice - 1);
+            Card selectedCard = deckManager.getHand().get(choice - 1);
             if (playCard(selectedCard, enemy)) {
-                hand.remove(choice - 1);
-                discardPile.add(selectedCard);
+                deckManager.moveFromHandToDiscard(selectedCard);
             }
         }
 
@@ -107,13 +97,14 @@ public class BattleManager {
             io.show("No energy left.");
         }
 
-        if (hand.isEmpty() && enemy.isAlive()) {
+        if (deckManager.getHandSize() == 0 && enemy.isAlive()) {
             io.show("No cards left in hand.");
         }
     }
 
     private void runEnemyTurn(Enemy enemy) {
         showSectionTitle("Enemy Turn");
+        Player player = state.getPlayer();
         int damage = enemy.getIntentDamage();
         player.takeDamage(damage);
         io.show(enemy.getName() + " uses " + enemy.getIntentDescription() + ".");
@@ -121,13 +112,15 @@ public class BattleManager {
     }
 
     private boolean playCard(Card card, Enemy enemy) {
+        Player player = state.getPlayer();
+
         if (!player.canSpendEnergy(card.getCost())) {
             io.show("Not enough energy.");
             return false;
         }
 
         player.spendEnergy(card.getCost());
-        playedCards++;
+        state.recordPlayedCard();
 
         int finalDamage = card.calculateDamageAgainst(enemy);
         enemy.takeDamage(finalDamage);
@@ -156,6 +149,8 @@ public class BattleManager {
     }
 
     private void showBattleState(Enemy enemy) {
+        Player player = state.getPlayer();
+        DeckManager deckManager = state.getDeckManager();
         io.show("");
         io.show("Player HP: " + player.getHealth() + "/" + player.getMaxHealth()
                 + " | Block: " + player.getBlock()
@@ -164,13 +159,14 @@ public class BattleManager {
                 + " | Enemy: " + enemy.getName()
                 + " | Element: " + enemy.getElement().getDisplayName());
         io.show("Enemy intent: " + enemy.getIntentDescription());
-        io.show("Draw pile: " + drawPile.size()
-                + " | Hand: " + hand.size()
-                + " | Discard pile: " + discardPile.size());
+        io.show("Draw pile: " + deckManager.getDrawPileSize()
+                + " | Hand: " + deckManager.getHandSize()
+                + " | Discard pile: " + deckManager.getDiscardPileSize());
     }
 
     private void showHand() {
         io.show("Hand:");
+        List<Card> hand = state.getDeckManager().getHand();
 
         for (int i = 0; i < hand.size(); i++) {
             Card card = hand.get(i);
@@ -194,42 +190,18 @@ public class BattleManager {
     }
 
     private void startPlayerTurn() {
+        Player player = state.getPlayer();
+        DeckManager deckManager = state.getDeckManager();
         player.startTurn();
-        discardHand();
-        drawCards(5);
-    }
+        deckManager.startTurn(CARDS_PER_TURN);
 
-    private void discardHand() {
-        discardPile.addAll(hand);
-        hand.clear();
-    }
-
-    private void drawCards(int amount) {
-        for (int i = 0; i < amount; i++) {
-            if (drawPile.isEmpty()) {
-                recycleDiscardPile();
-            }
-
-            if (drawPile.isEmpty()) {
-                return;
-            }
-
-            hand.add(drawPile.remove(0));
+        if (deckManager.wasDiscardRecycledLastDraw()) {
+            io.show("Discard pile is recycled into draw pile.");
         }
-    }
-
-    private void recycleDiscardPile() {
-        if (discardPile.isEmpty()) {
-            return;
-        }
-
-        drawPile.addAll(discardPile);
-        discardPile.clear();
-        io.show("Discard pile is recycled into draw pile.");
     }
 
     private void chooseRewardCard() {
-        List<Card> rewards = createRewardChoices();
+        List<Card> rewards = GameContent.createRewardChoices(state.getSelectedRewards());
 
         showSectionTitle("Reward");
         io.show("Choose one reward card:");
@@ -253,8 +225,8 @@ public class BattleManager {
             }
 
             Card selectedReward = rewards.get(choice - 1);
-            discardPile.add(selectedReward);
-            selectedRewards++;
+            state.getDeckManager().addToDiscard(selectedReward);
+            state.recordSelectedReward();
             io.show(selectedReward.getName() + " was added to your discard pile.");
             return;
         }
@@ -274,18 +246,20 @@ public class BattleManager {
         io.show("Enemy HP: " + enemy.getHealth() + "/" + enemy.getMaxHealth());
     }
 
-    private void showBattleResult(Enemy enemy, int defeatedEnemies) {
+    private void showBattleResult(Enemy enemy) {
         showDivider();
-        io.show(enemy.getName() + " defeated. (" + defeatedEnemies + "/" + enemies.size() + ")");
+        io.show(enemy.getName() + " defeated. (" + state.getCurrentEnemyIndex() + "/" + state.getEnemyCount() + ")");
+        Player player = state.getPlayer();
         io.show("Player HP: " + player.getHealth() + "/" + player.getMaxHealth());
     }
 
-    private void showFinalSummary(int defeatedEnemies) {
+    private void showFinalSummary() {
+        Player player = state.getPlayer();
         showDivider();
         io.show("Run Summary");
-        io.show("Enemies defeated: " + defeatedEnemies + "/" + enemies.size());
-        io.show("Cards played: " + playedCards);
-        io.show("Reward cards chosen: " + selectedRewards);
+        io.show("Enemies defeated: " + state.getCurrentEnemyIndex() + "/" + state.getEnemyCount());
+        io.show("Cards played: " + state.getPlayedCards());
+        io.show("Reward cards chosen: " + state.getSelectedRewards());
         io.show("Final HP: " + player.getHealth() + "/" + player.getMaxHealth());
     }
 
@@ -300,41 +274,4 @@ public class BattleManager {
         io.show("----------------------------------------");
     }
 
-    private List<Card> createRewardChoices() {
-        List<Card> rewards = new ArrayList<>();
-
-        if (rewardCount == 0) {
-            rewards.add(new Card("Flame Surge", Element.FIRE, 2, 12, 0, 0));
-            rewards.add(new Card("Healing Rain", Element.WATER, 1, 0, 3, 5));
-            rewards.add(new Card("Quick Spark", Element.THUNDER, 0, 3, 0, 0));
-        } else {
-            rewards.add(new Card("Blazing Guard", Element.FIRE, 1, 4, 4, 0));
-            rewards.add(new Card("Tidal Crash", Element.WATER, 2, 9, 2, 0));
-            rewards.add(new Card("Storm Breaker", Element.THUNDER, 2, 11, 0, 0));
-        }
-
-        rewardCount++;
-        return rewards;
-    }
-
-    private List<Card> createStarterDeck() {
-        List<Card> cards = new ArrayList<>();
-        cards.add(new Card("Fire Strike", Element.FIRE, 1, 6, 0, 0));
-        cards.add(new Card("Water Shield", Element.WATER, 1, 0, 5, 0));
-        cards.add(new Card("Thunder Bolt", Element.THUNDER, 2, 10, 0, 0));
-        cards.add(new Card("River Blade", Element.WATER, 1, 4, 2, 0));
-        cards.add(new Card("Storm Guard", Element.THUNDER, 2, 5, 5, 0));
-        cards.add(new Card("Ember Guard", Element.FIRE, 1, 3, 3, 0));
-        cards.add(new Card("Rain Lance", Element.WATER, 2, 8, 0, 0));
-        cards.add(new Card("Spark Step", Element.THUNDER, 1, 4, 1, 0));
-        return cards;
-    }
-
-    private List<Enemy> createEnemies() {
-        List<Enemy> enemyList = new ArrayList<>();
-        enemyList.add(new Enemy("Training Dummy", Element.NONE, 18, 4));
-        enemyList.add(new Enemy("Fire Spirit", Element.FIRE, 20, 5));
-        enemyList.add(new Enemy("Thunder Beast", Element.THUNDER, 24, 6));
-        return enemyList;
-    }
 }

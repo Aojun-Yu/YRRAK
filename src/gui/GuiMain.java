@@ -1,5 +1,8 @@
 package gui;
 
+import battle.DeckManager;
+import battle.GameContent;
+import battle.GameState;
 import model.Card;
 import model.Element;
 import model.Enemy;
@@ -7,9 +10,6 @@ import model.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class GuiMain {
     public static void main(String[] args) {
@@ -34,12 +34,13 @@ public class GuiMain {
         private static final Font SECTION_FONT = new Font("SansSerif", Font.BOLD, 14);
         private static final Font BODY_FONT = new Font("SansSerif", Font.PLAIN, 13);
         private static final Font CARD_FONT = new Font("SansSerif", Font.BOLD, 12);
+        private static final int WINDOW_WIDTH = 980;
+        private static final int WINDOW_HEIGHT = 680;
+        private static final int CARDS_PER_TURN = 4;
+        private static final int HAND_COLUMNS = 4;
+        private static final int REWARD_COLUMNS = 3;
 
-        private final Player player;
-        private final List<Enemy> enemies;
-        private final List<Card> drawPile;
-        private final List<Card> hand;
-        private final List<Card> discardPile;
+        private final GameState state;
         private final JLabel titleLabel;
         private final JLabel playerStatusLabel;
         private final JLabel enemyStatusLabel;
@@ -50,21 +51,9 @@ public class GuiMain {
         private final JPanel rewardPanel;
         private final JButton endTurnButton;
         private final JButton restartButton;
-        private int currentEnemyIndex;
-        private int selectedRewards;
-        private int playedCards;
-        private int turnNumber;
 
         GameFrame() {
-            player = new Player(30, 3);
-            enemies = createEnemies();
-            drawPile = createStarterDeck();
-            hand = new ArrayList<>();
-            discardPile = new ArrayList<>();
-            currentEnemyIndex = 0;
-            selectedRewards = 0;
-            playedCards = 0;
-            turnNumber = 1;
+            state = new GameState(true);
 
             titleLabel = new JLabel();
             playerStatusLabel = new JLabel();
@@ -72,20 +61,21 @@ public class GuiMain {
             intentLabel = new JLabel();
             deckStatusLabel = new JLabel();
             logArea = new JTextArea(12, 48);
-            handPanel = new JPanel(new GridLayout(0, 4, 10, 10));
-            rewardPanel = new JPanel(new GridLayout(0, 3, 10, 10));
-            endTurnButton = new JButton("End Turn - enemy attacks, then Energy returns to 3");
+            handPanel = new JPanel(new GridLayout(0, HAND_COLUMNS, 10, 10));
+            rewardPanel = new JPanel(new GridLayout(0, REWARD_COLUMNS, 10, 10));
+            endTurnButton = new JButton("End Turn");
             restartButton = new JButton("Restart");
 
             setTitle("YRRAK - Element Card Battle");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setMinimumSize(new Dimension(980, 680));
+            setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
             getContentPane().setBackground(BACKGROUND);
 
             buildLayout();
-            startPlayerTurn(false);
             addLog("Goal: defeat 3 enemies.");
             addLog("Rule: click End Turn to let the enemy act, then your Energy returns to 3.");
+            addLog("Current enemy: " + state.currentEnemy().getName() + ".");
+            startPlayerTurn(false);
             refreshView();
             pack();
             setLocationRelativeTo(null);
@@ -134,6 +124,9 @@ public class GuiMain {
             restartButton.addActionListener(event -> restartGame());
             styleButton(endTurnButton, ACCENT);
             styleButton(restartButton, MUTED_TEXT);
+            endTurnButton.setToolTipText("Let the enemy act, then draw a new hand.");
+            restartButton.setToolTipText("Start a fresh run.");
+            rewardPanel.setVisible(false);
 
             JPanel actionPanel = new JPanel(new GridLayout(1, 2, 10, 10));
             actionPanel.setBackground(BACKGROUND);
@@ -151,43 +144,97 @@ public class GuiMain {
         }
 
         private void refreshView() {
-            Enemy enemy = currentEnemy();
+            Enemy enemy = state.currentEnemy();
             boolean hasRewardChoices = rewardPanel.getComponentCount() > 0;
-            boolean gameActive = player.isAlive() && currentEnemyIndex < enemies.size() && enemy.isAlive();
+            boolean gameActive = state.isBattleActive();
 
-            titleLabel.setText("YRRAK Battle " + Math.min(currentEnemyIndex + 1, enemies.size())
-                    + "/" + enemies.size() + " - Turn " + turnNumber);
-            playerStatusLabel.setText("Player  HP " + player.getHealth() + "/" + player.getMaxHealth()
-                    + "    Block " + player.getBlock()
-                    + "    Energy " + player.getEnergy() + "/" + player.getMaxEnergy());
-            enemyStatusLabel.setText("Enemy  " + enemy.getName()
-                    + "    HP " + enemy.getHealth() + "/" + enemy.getMaxHealth()
-                    + "    Element " + enemy.getElement().getDisplayName());
-            intentLabel.setText("Enemy Intent  " + enemy.getIntentDescription());
-            deckStatusLabel.setText("Deck " + drawPile.size()
-                    + "    Hand " + hand.size()
-                    + "    Discard " + discardPile.size()
-                    + "    Rewards " + selectedRewards
-                    + "    Cards Played " + playedCards);
-
-            handPanel.removeAll();
-
-            for (Card card : hand) {
-                JButton cardButton = new JButton(buildCardText(card));
-                cardButton.addActionListener(event -> playCard(card));
-                cardButton.setEnabled(gameActive && !hasRewardChoices && player.canSpendEnergy(card.getCost()));
-                styleButton(cardButton, colorForElement(card.getElement()));
-                handPanel.add(cardButton);
-            }
-
+            updateStatusLabels(enemy);
+            rebuildHandPanel(gameActive, hasRewardChoices);
+            rewardPanel.setVisible(hasRewardChoices);
             endTurnButton.setEnabled(gameActive && !hasRewardChoices);
+            endTurnButton.setToolTipText(buildEndTurnTooltip(gameActive, hasRewardChoices));
 
             handPanel.revalidate();
             handPanel.repaint();
+            rewardPanel.revalidate();
+            rewardPanel.repaint();
+        }
+
+        private void updateStatusLabels(Enemy enemy) {
+            Player player = state.getPlayer();
+            DeckManager deckManager = state.getDeckManager();
+
+            if (state.isVictory()) {
+                titleLabel.setText("YRRAK - Victory");
+                enemyStatusLabel.setText("Enemy  All enemies defeated");
+                intentLabel.setText("Enemy Intent  None");
+            } else if (!player.isAlive()) {
+                titleLabel.setText("YRRAK - Game Over");
+                enemyStatusLabel.setText("Enemy  " + enemy.getName()
+                        + "    HP " + enemy.getHealth() + "/" + enemy.getMaxHealth()
+                        + "    Element " + enemy.getElement().getDisplayName());
+                intentLabel.setText("Enemy Intent  Run ended");
+            } else {
+                titleLabel.setText("YRRAK Battle " + (state.getCurrentEnemyIndex() + 1)
+                        + "/" + state.getEnemyCount() + " - Turn " + state.getTurnNumber());
+                enemyStatusLabel.setText("Enemy  " + enemy.getName()
+                        + "    HP " + enemy.getHealth() + "/" + enemy.getMaxHealth()
+                        + "    Element " + enemy.getElement().getDisplayName());
+                intentLabel.setText("Enemy Intent  " + enemy.getIntentDescription());
+            }
+
+            playerStatusLabel.setText("Player  HP " + player.getHealth() + "/" + player.getMaxHealth()
+                    + "    Block " + player.getBlock()
+                    + "    Energy " + player.getEnergy() + "/" + player.getMaxEnergy());
+            deckStatusLabel.setText("Deck " + deckManager.getDrawPileSize()
+                    + "    Hand " + deckManager.getHandSize()
+                    + "    Discard " + deckManager.getDiscardPileSize()
+                    + "    Rewards " + state.getSelectedRewards()
+                    + "    Cards Played " + state.getPlayedCards());
+        }
+
+        private void rebuildHandPanel(boolean gameActive, boolean hasRewardChoices) {
+            handPanel.removeAll();
+
+            for (Card card : state.getDeckManager().getHand()) {
+                handPanel.add(createHandButton(card, gameActive, hasRewardChoices));
+            }
+        }
+
+        private JButton createHandButton(Card card, boolean gameActive, boolean hasRewardChoices) {
+            Player player = state.getPlayer();
+            boolean hasEnergy = player.canSpendEnergy(card.getCost());
+            boolean enabled = gameActive && !hasRewardChoices && hasEnergy;
+            JButton cardButton = createCardButton(card, enabled);
+            cardButton.addActionListener(event -> playCard(card));
+
+            if (!gameActive) {
+                cardButton.setToolTipText("This battle is over.");
+            } else if (hasRewardChoices) {
+                cardButton.setToolTipText("Choose a reward before playing more cards.");
+            } else if (!hasEnergy) {
+                cardButton.setToolTipText("Need " + card.getCost() + " Energy. You have " + player.getEnergy() + ".");
+            }
+
+            return cardButton;
+        }
+
+        private String buildEndTurnTooltip(boolean gameActive, boolean hasRewardChoices) {
+            if (!gameActive) {
+                return "Start a new run or close the window.";
+            }
+
+            if (hasRewardChoices) {
+                return "Choose a reward before ending the turn.";
+            }
+
+            return "Let the enemy act, then draw a new hand.";
         }
 
         private void playCard(Card card) {
-            Enemy enemy = currentEnemy();
+            Player player = state.getPlayer();
+            Enemy enemy = state.currentEnemy();
+            DeckManager deckManager = state.getDeckManager();
 
             if (!player.canSpendEnergy(card.getCost())) {
                 addLog("Not enough Energy for " + card.getName() + ".");
@@ -195,9 +242,8 @@ public class GuiMain {
             }
 
             player.spendEnergy(card.getCost());
-            hand.remove(card);
-            discardPile.add(card);
-            playedCards++;
+            deckManager.moveFromHandToDiscard(card);
+            state.recordPlayedCard();
 
             int finalDamage = card.calculateDamageAgainst(enemy);
             enemy.takeDamage(finalDamage);
@@ -233,7 +279,8 @@ public class GuiMain {
         }
 
         private void runEnemyTurn() {
-            Enemy enemy = currentEnemy();
+            Player player = state.getPlayer();
+            Enemy enemy = state.currentEnemy();
 
             if (!player.isAlive() || !enemy.isAlive()) {
                 return;
@@ -246,7 +293,7 @@ public class GuiMain {
 
             if (!player.isAlive()) {
                 addLog("Game Over.");
-                addLog("Defeated enemies: " + currentEnemyIndex + "/" + enemies.size() + ".");
+                addLog("Defeated enemies: " + state.getCurrentEnemyIndex() + "/" + state.getEnemyCount() + ".");
                 refreshView();
                 return;
             }
@@ -257,51 +304,33 @@ public class GuiMain {
 
         private void startPlayerTurn(boolean advanceTurn) {
             if (advanceTurn) {
-                turnNumber++;
+                state.advanceTurn();
             }
 
-            discardPile.addAll(hand);
-            hand.clear();
+            Player player = state.getPlayer();
+            DeckManager deckManager = state.getDeckManager();
             player.startTurn();
-            drawCards(4);
+            deckManager.startTurn(CARDS_PER_TURN);
+
+            if (deckManager.wasDiscardRecycledLastDraw()) {
+                addLog("Discard pile reshuffled into deck.");
+            }
+
             addLog("Player turn starts. Energy restored to " + player.getMaxEnergy() + ".");
         }
 
-        private void drawCards(int amount) {
-            for (int i = 0; i < amount; i++) {
-                if (drawPile.isEmpty()) {
-                    if (discardPile.isEmpty()) {
-                        return;
-                    }
-
-                    drawPile.addAll(discardPile);
-                    discardPile.clear();
-                    Collections.shuffle(drawPile);
-                    addLog("Discard pile reshuffled into deck.");
-                }
-
-                hand.add(drawPile.remove(0));
-            }
-        }
-
         private boolean hasPlayableCard() {
-            for (Card card : hand) {
-                if (player.canSpendEnergy(card.getCost())) {
-                    return true;
-                }
-            }
-
-            return false;
+            return state.getDeckManager().hasPlayableCard(state.getPlayer());
         }
 
         private void handleEnemyDefeated() {
-            currentEnemyIndex++;
+            state.advanceEnemy();
 
-            if (currentEnemyIndex >= enemies.size()) {
+            if (state.isVictory()) {
                 addLog("Victory! All enemies were defeated.");
-                addLog("Cards played: " + playedCards + ".");
-                addLog("Final HP: " + player.getHealth() + "/" + player.getMaxHealth() + ".");
-                hand.clear();
+                addLog("Cards played: " + state.getPlayedCards() + ".");
+                addLog("Final HP: " + state.getPlayer().getHealth() + "/" + state.getPlayer().getMaxHealth() + ".");
+                state.getDeckManager().discardHand();
                 return;
             }
 
@@ -311,28 +340,27 @@ public class GuiMain {
         private void showRewardChoices() {
             rewardPanel.removeAll();
 
-            for (Card reward : createRewardChoices()) {
-                JButton rewardButton = new JButton(buildCardText(reward));
-                rewardButton.addActionListener(event -> chooseReward(reward));
-                styleButton(rewardButton, colorForElement(reward.getElement()));
-                rewardPanel.add(rewardButton);
+            for (Card reward : GameContent.createRewardChoices(state.getSelectedRewards())) {
+                rewardPanel.add(createRewardButton(reward));
             }
 
+            rewardPanel.setVisible(true);
             rewardPanel.revalidate();
             rewardPanel.repaint();
             addLog("Choose one reward card before the next battle.");
         }
 
         private void chooseReward(Card reward) {
-            discardPile.add(reward);
-            selectedRewards++;
+            state.getDeckManager().addToDiscard(reward);
+            state.recordSelectedReward();
             rewardPanel.removeAll();
+            rewardPanel.setVisible(false);
             rewardPanel.revalidate();
             rewardPanel.repaint();
 
-            startPlayerTurn(true);
             addLog(reward.getName() + " was added to your deck.");
-            addLog("Next enemy: " + currentEnemy().getName() + ".");
+            addLog("Next enemy: " + state.currentEnemy().getName() + ".");
+            startPlayerTurn(true);
             refreshView();
         }
 
@@ -351,6 +379,31 @@ public class GuiMain {
                     + "<br>Block " + card.getBlock()
                     + "<br>Heal " + card.getHeal()
                     + "</div></html>";
+        }
+
+        private JButton createRewardButton(Card card) {
+            JButton rewardButton = createCardButton(card, true);
+            rewardButton.addActionListener(event -> chooseReward(card));
+            rewardButton.setToolTipText("Add " + card.getName() + " to your deck.");
+            return rewardButton;
+        }
+
+        private JButton createCardButton(Card card, boolean enabled) {
+            JButton button = new JButton(buildCardText(card));
+            button.setEnabled(enabled);
+            button.setToolTipText(buildCardSummary(card));
+            button.setPreferredSize(new Dimension(150, 112));
+            styleButton(button, colorForElement(card.getElement()));
+            return button;
+        }
+
+        private String buildCardSummary(Card card) {
+            return card.getName()
+                    + " | " + card.getElement().getDisplayName()
+                    + " | Cost " + card.getCost()
+                    + " | Damage " + card.getDamage()
+                    + " | Block " + card.getBlock()
+                    + " | Heal " + card.getHeal();
         }
 
         private void stylePanel(JPanel panel, String title) {
@@ -413,46 +466,5 @@ public class GuiMain {
             logArea.setCaretPosition(logArea.getDocument().getLength());
         }
 
-        private Enemy currentEnemy() {
-            return enemies.get(Math.min(currentEnemyIndex, enemies.size() - 1));
-        }
-
-        private List<Card> createStarterDeck() {
-            List<Card> cards = new ArrayList<>();
-            cards.add(new Card("Fire Strike", Element.FIRE, 1, 6, 0, 0));
-            cards.add(new Card("Fire Strike", Element.FIRE, 1, 6, 0, 0));
-            cards.add(new Card("Water Shield", Element.WATER, 1, 0, 6, 0));
-            cards.add(new Card("Water Shield", Element.WATER, 1, 0, 6, 0));
-            cards.add(new Card("Thunder Bolt", Element.THUNDER, 2, 10, 0, 0));
-            cards.add(new Card("River Blade", Element.WATER, 1, 4, 2, 0));
-            cards.add(new Card("Quick Spark", Element.THUNDER, 0, 3, 0, 0));
-            cards.add(new Card("Healing Rain", Element.WATER, 1, 0, 2, 5));
-            Collections.shuffle(cards);
-            return cards;
-        }
-
-        private List<Enemy> createEnemies() {
-            List<Enemy> enemyList = new ArrayList<>();
-            enemyList.add(new Enemy("Training Dummy", Element.NONE, 18, 4));
-            enemyList.add(new Enemy("Fire Spirit", Element.FIRE, 20, 5));
-            enemyList.add(new Enemy("Thunder Beast", Element.THUNDER, 24, 6));
-            return enemyList;
-        }
-
-        private List<Card> createRewardChoices() {
-            List<Card> rewards = new ArrayList<>();
-
-            if (selectedRewards == 0) {
-                rewards.add(new Card("Flame Surge", Element.FIRE, 2, 12, 0, 0));
-                rewards.add(new Card("Healing Rain", Element.WATER, 1, 0, 2, 5));
-                rewards.add(new Card("Quick Spark", Element.THUNDER, 0, 3, 0, 0));
-            } else {
-                rewards.add(new Card("Blazing Guard", Element.FIRE, 1, 4, 4, 0));
-                rewards.add(new Card("Tidal Crash", Element.WATER, 2, 9, 2, 0));
-                rewards.add(new Card("Storm Breaker", Element.THUNDER, 2, 11, 0, 0));
-            }
-
-            return rewards;
-        }
     }
 }
