@@ -51,3 +51,11 @@ Run the prepared demo path:
 ```bash
 ./scripts/demo.sh
 ```
+
+Run the GUI prototype:
+
+```bash
+./scripts/gui.sh
+```
+
+Detailed run instructions are in `docs/how-to-run.md`.

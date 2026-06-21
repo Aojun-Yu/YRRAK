@@ -137,6 +137,8 @@ javac -encoding UTF-8 -d out/production/YRRAK $(find src -name "*.java")
 java -cp out/production/YRRAK Main
 ```
 
+For detailed run options, including IntelliJ IDEA, see `docs/how-to-run.md`.
+
 ## Controls
 
 During the player turn:
