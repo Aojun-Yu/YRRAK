@@ -1,2 +1,0 @@
-# YRRAK
-Elemental Card Roguelike
